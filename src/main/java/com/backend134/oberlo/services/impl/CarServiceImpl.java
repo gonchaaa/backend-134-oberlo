@@ -122,14 +122,35 @@ public class CarServiceImpl implements ICarService {
     }
 
     @Override
-    public List<CarResponseDTO> getCarsByModels(Models model) {
-         carRepository.findByModelId(model.getId())
-                .orElseThrow(()->new RuntimeException("Model not found with id: "+model.getId()));
+    public List<CarResponseDTO> getCarsByModels(Models modelId) {
+
+        Optional<Models> models = carRepository.findByModelId(modelId.getId());
+        if (models.isEmpty()) {
+            throw new RuntimeException("No cars found for model id: " + modelId.getId());
+        }
+        return models.stream()
+                .map(m -> {
+                    Optional<Cars> car = carRepository.findById(m.getId());
+                    if (car.isEmpty()) {
+                        throw new RuntimeException("Car not found for id: " + m.getId());
+                    }
+                    Cars foundCar = car.get();
+
+                    CarResponseDTO dto = new CarResponseDTO();
+                    dto.setCarId(foundCar.getId());
+                    dto.setCarName(foundCar.getCarName());
+                    dto.setYear(foundCar.getYear());
+                    dto.setPrice(foundCar.getPrice());
+                    dto.setDescription(foundCar.getDescription());
+                    dto.setImageUrl(foundCar.getImageUrl());
+                    dto.setModelId(foundCar.getModelId().getId());
+                    return dto;
+                })
+                .toList();
 
 
-
-        return List.of();
     }
+
 
     @Override
     public List<CarResponseDTO> getCarsByYear(Integer year) {

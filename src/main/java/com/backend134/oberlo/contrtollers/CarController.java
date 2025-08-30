@@ -37,8 +37,8 @@ public class CarController {
         return carService.getCarbyId(id);
     }
     @GetMapping("/getCarsByModels")
-    List<CarResponseDTO> getCarsByModels(@RequestParam Models model){
-        return carService.getCarsByModels(model);
+    List<CarResponseDTO> getCarsByModels(@RequestParam Models id){
+        return carService.getCarsByModels(id);
     }
     @GetMapping("/getCarsByYear")
     List<CarResponseDTO> getCarsByYear(@RequestParam Integer year){

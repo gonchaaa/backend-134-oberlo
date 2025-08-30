@@ -12,6 +12,6 @@ public interface ICarService {
     CarResponseDTO getCarbyId(Long id);
     void  deleteCar(Long id);
     List<CarResponseDTO> getAllCars();
-    List<CarResponseDTO> getCarsByModels(Models model);//modele gore cagirma
+    List<CarResponseDTO> getCarsByModels(Models modelId);//modele gore cagirma
     List<CarResponseDTO> getCarsByYear(Integer year);
 }
