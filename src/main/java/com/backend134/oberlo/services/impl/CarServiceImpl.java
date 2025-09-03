@@ -10,6 +10,7 @@ import com.backend134.oberlo.services.ICarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,45 +116,77 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public List<CarResponseDTO> getAllCars() {
+        List<Cars> cars = carRepository.findAll();
 
-
-
-        return List.of();
-    }
-
-    @Override
-    public List<CarResponseDTO> getCarsByModels(Models modelId) {
-
-        Optional<Models> models = carRepository.findByModelId(modelId.getId());
-        if (models.isEmpty()) {
-            throw new RuntimeException("No cars found for model id: " + modelId.getId());
+        if(cars.isEmpty()){
+            throw new RuntimeException("No cars found");
         }
-        return models.stream()
-                .map(m -> {
-                    Optional<Cars> car = carRepository.findById(m.getId());
-                    if (car.isEmpty()) {
-                        throw new RuntimeException("Car not found for id: " + m.getId());
-                    }
-                    Cars foundCar = car.get();
 
+        return cars.stream()
+                .map(car -> {;
                     CarResponseDTO dto = new CarResponseDTO();
-                    dto.setCarId(foundCar.getId());
-                    dto.setCarName(foundCar.getCarName());
-                    dto.setYear(foundCar.getYear());
-                    dto.setPrice(foundCar.getPrice());
-                    dto.setDescription(foundCar.getDescription());
-                    dto.setImageUrl(foundCar.getImageUrl());
-                    dto.setModelId(foundCar.getModelId().getId());
+                    dto.setCarId(car.getId());
+                    dto.setCarName(car.getCarName());
+                    dto.setYear(car.getYear());
+                    dto.setPrice(car.getPrice());
+                    dto.setDescription(car.getDescription());
+                    dto.setImageUrl(car.getImageUrl());
+                    dto.setModelId(car.getModelId().getId());
                     return dto;
                 })
                 .toList();
+    }
 
+    @Override
+    public List<CarResponseDTO> getCarsByModels(Long modelId) {
+        Optional<Models> model = modelRepository.findById(modelId);
 
+        if (model.isEmpty()) {
+            throw new RuntimeException("No modelId in models table " + modelId);
+        }
+
+        List<Cars> cars = carRepository.findByModelId(model.get());
+
+        if (cars.isEmpty()) {
+            throw new RuntimeException("No cars found for model id: " + modelId);
+        }
+
+        return cars.stream()
+                .map(car -> {
+                    CarResponseDTO dto = new CarResponseDTO();
+                    dto.setCarId(car.getId());
+                    dto.setCarName(car.getCarName());
+                    dto.setYear(car.getYear());
+                    dto.setPrice(car.getPrice());
+                    dto.setDescription(car.getDescription());
+                    dto.setImageUrl(car.getImageUrl());
+                    dto.setModelId(car.getModelId().getId());
+                    return dto;
+                })
+                .toList();
     }
 
 
     @Override
     public List<CarResponseDTO> getCarsByYear(Integer year) {
-        return List.of();
+        List<Cars> cars = carRepository.findByYear(year);
+
+        if (cars.isEmpty()){
+            throw new RuntimeException("No cars found for year: " + year);
+        }
+
+        return cars.stream()
+                .map(car -> {
+                    CarResponseDTO dto = new CarResponseDTO();
+                    dto.setCarId(car.getId());
+                    dto.setCarName(car.getCarName());
+                    dto.setYear(car.getYear());
+                    dto.setPrice(car.getPrice());
+                    dto.setDescription(car.getDescription());
+                    dto.setImageUrl(car.getImageUrl());
+                    dto.setModelId(car.getModelId().getId());
+                    return dto;
+                })
+                .toList();
     }
 }

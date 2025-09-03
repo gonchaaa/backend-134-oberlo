@@ -20,26 +20,32 @@ public class CarController {
     CarResponseDTO createCar (@RequestBody CarRequestDTO carRequestDto){
       return carService.createCar(carRequestDto);
     };
+
     @PutMapping("/{id}")
     CarResponseDTO updateCar(@PathVariable(name="id") Long id,@RequestBody CarRequestDTO carRequestDto){
         return carService.updateCar(id, carRequestDto);
     }
+
     @DeleteMapping("/{id}")
-    void  deleteCar(@PathVariable(name = "id") Long id){
+    void deleteCar(@PathVariable(name = "id") Long id){
         carService.deleteCar(id);
     }
+
     @GetMapping()
     List<CarResponseDTO> getAllCars(){
         return carService.getAllCars();
     }
+
     @GetMapping("/{id}")
-    CarResponseDTO getCarbyId(Long id){
+    CarResponseDTO getCarbyId(@PathVariable(name = "id") Long id){
         return carService.getCarbyId(id);
     }
+
     @GetMapping("/getCarsByModels")
-    List<CarResponseDTO> getCarsByModels(@RequestParam Models id){
+    List<CarResponseDTO> getCarsByModels(@RequestParam Long id){
         return carService.getCarsByModels(id);
     }
+
     @GetMapping("/getCarsByYear")
     List<CarResponseDTO> getCarsByYear(@RequestParam Integer year){
         return carService.getCarsByYear(year);
