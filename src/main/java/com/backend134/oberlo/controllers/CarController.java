@@ -1,8 +1,7 @@
-package com.backend134.oberlo.contrtollers;
+package com.backend134.oberlo.controllers;
 
 import com.backend134.oberlo.DTOs.request.CarRequestDTO;
 import com.backend134.oberlo.DTOs.response.CarResponseDTO;
-import com.backend134.oberlo.entities.Models;
 import com.backend134.oberlo.services.ICarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

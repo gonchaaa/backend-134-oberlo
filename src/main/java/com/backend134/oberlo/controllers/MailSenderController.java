@@ -1,4 +1,4 @@
-package com.backend134.oberlo.contrtollers;
+package com.backend134.oberlo.controllers;
 
 import com.backend134.oberlo.entities.Users;
 import com.backend134.oberlo.repositories.UserRepository;

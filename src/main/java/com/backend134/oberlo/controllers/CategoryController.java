@@ -1,10 +1,9 @@
-package com.backend134.oberlo.contrtollers;
+package com.backend134.oberlo.controllers;
 
 import com.backend134.oberlo.DTOs.request.CategoryRequestDTO;
 import com.backend134.oberlo.DTOs.response.CategoryResponseDTO;
 import com.backend134.oberlo.services.impl.CategoryServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

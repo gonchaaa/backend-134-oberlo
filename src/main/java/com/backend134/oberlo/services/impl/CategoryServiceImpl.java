@@ -3,6 +3,9 @@ package com.backend134.oberlo.services.impl;
 import com.backend134.oberlo.DTOs.request.CategoryRequestDTO;
 import com.backend134.oberlo.DTOs.response.CategoryResponseDTO;
 import com.backend134.oberlo.entities.Categories;
+import com.backend134.oberlo.exceptions.BaseException;
+import com.backend134.oberlo.exceptions.ErrorMessage;
+import com.backend134.oberlo.exceptions.ErrorsType;
 import com.backend134.oberlo.repositories.CategoryRepository;
 import com.backend134.oberlo.services.ICategoryService;
 import lombok.RequiredArgsConstructor;
@@ -21,37 +24,46 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
-        Categories category = new Categories();
 
-        category.setCategoryName(categoryRequestDTO.getCategoryName());
-        categoryRepository.save(category);
-        categoryResponseDTO.setCategoryName(category.getCategoryName());
+        try{
+            CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+            Categories category = new Categories();
 
-        return categoryResponseDTO;
+            category.setCategoryName(categoryRequestDTO.getCategoryName());
+            categoryRepository.save(category);
+            categoryResponseDTO.setCategoryName(category.getCategoryName());
+
+            return categoryResponseDTO;
+        } catch (Exception e) {
+            throw new BaseException(new ErrorMessage(ErrorsType.CANNOT_CREATED, "Category cannot created"));
+        }
+
     }
 
     @Override
     public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
-        Optional<Categories> category = categoryRepository.findById(id);
-        if (category.isPresent()) {
-            Categories foundCategory = category.get();
 
-            foundCategory.setCategoryName(categoryRequestDTO.getCategoryName());
-            categoryRepository.save(foundCategory);
 
-            CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
-            categoryResponseDTO.setId(foundCategory.getId());
-            categoryResponseDTO.setCategoryName(foundCategory.getCategoryName());
+            Optional<Categories> category = categoryRepository.findById(id);
 
-            return categoryResponseDTO;
-        }
-        return null;
+            if (category.isPresent()) {
+                    Categories foundCategory = category.get();
+
+                    foundCategory.setCategoryName(categoryRequestDTO.getCategoryName());
+                    categoryRepository.save(foundCategory);
+
+                    CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+                    categoryResponseDTO.setId(foundCategory.getId());
+                    categoryResponseDTO.setCategoryName(foundCategory.getCategoryName());
+
+                    return categoryResponseDTO;
+
+            }
+            throw new BaseException(new ErrorMessage(ErrorsType.CANNOT_UPDATED, "Category not found"));
     }
 
     @Override
     public CategoryResponseDTO getCategoryById(Long id) {
-
         Optional<Categories> category = categoryRepository.findById(id);
         if (category.isPresent()) {
             Categories foundCategory = category.get();
@@ -63,7 +75,8 @@ public class CategoryServiceImpl implements ICategoryService {
             return categoryResponseDTO;
         }
 
-        return null;
+        throw new BaseException(new ErrorMessage(ErrorsType.NO_DATA_FOUND, "Category not found"));
+
     }
 
     @Override
@@ -76,15 +89,21 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public List<CategoryResponseDTO> getAllCategories() {
+
     List<CategoryResponseDTO> categoryResponseDTOList = new ArrayList<>();
     List<Categories> categories = categoryRepository.findAll();
-    for (Categories category: categories){
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
-        categoryResponseDTO.setId(category.getId());
-        categoryResponseDTO.setCategoryName(category.getCategoryName());
-        categoryResponseDTOList.add(categoryResponseDTO);
+    try{
+        for (Categories category: categories){
+            CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+            categoryResponseDTO.setId(category.getId());
+            categoryResponseDTO.setCategoryName(category.getCategoryName());
+            categoryResponseDTOList.add(categoryResponseDTO);
+        }
+        return categoryResponseDTOList;
+    } catch (Exception e) {
+        throw new BaseException(new ErrorMessage(ErrorsType.NO_DATA_FOUND, "No categories found"));
     }
-    return categoryResponseDTOList;
+
     }
 }
 
