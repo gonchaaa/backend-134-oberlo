@@ -4,10 +4,12 @@ import com.backend134.oberlo.DTOs.request.CarRequestDTO;
 import com.backend134.oberlo.DTOs.response.CarResponseDTO;
 import com.backend134.oberlo.services.ICarService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cars")
@@ -17,7 +19,9 @@ public class CarController {
 
     @PostMapping()
     CarResponseDTO createCar (@RequestBody CarRequestDTO carRequestDto){
-      return carService.createCar(carRequestDto);
+
+        log.info("Creating car with data: {}", carRequestDto);
+        return carService.createCar(carRequestDto);
     };
 
     @PutMapping("/{id}")

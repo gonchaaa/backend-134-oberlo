@@ -8,12 +8,14 @@ import com.backend134.oberlo.repositories.CarRepository;
 import com.backend134.oberlo.repositories.ModelRepository;
 import com.backend134.oberlo.services.ICarService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements ICarService {
@@ -27,6 +29,7 @@ public class CarServiceImpl implements ICarService {
         Models model= modelRepository.findById(carRequestDto.getModelId())
                 .orElseThrow(()->new RuntimeException("Model not found with id: "+carRequestDto.getModelId()));
 
+        log.info("Creating car with model: {},{}", model, carRequestDto);
         CarResponseDTO carResponseDTO = new CarResponseDTO();
          Cars car = new Cars();
 
@@ -39,6 +42,7 @@ public class CarServiceImpl implements ICarService {
 
 
          carRepository.save(car);
+
 
          carResponseDTO.setCarId(car.getId());
          carResponseDTO.setCarName(car.getCarName());
@@ -56,6 +60,7 @@ public class CarServiceImpl implements ICarService {
     public CarResponseDTO updateCar(Long id, CarRequestDTO carRequestDto) {
 
        Optional<Cars> car = carRepository.findById(id);
+       log.info("Updating car with id: {}, data: {}", id, carRequestDto);
 
        if (car.isPresent()){
            Cars updatedCar = car.get();
